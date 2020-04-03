@@ -1,5 +1,13 @@
 #include "Table.h"
 #include "ListWithoutHead.h"
+#define N 10
+
+int Hash_function(int _id, int _size)
+{
+	int index;
+	index = _id % (_size / 2);
+	return index;
+}
 
 class HashTable : public Table
 {
@@ -9,8 +17,8 @@ class HashTable : public Table
 public:
 	HashTable() 
 	{
-		Arr = new ListWithoutHead<P>[10];
-		size = 10;
+		Arr = new ListWithoutHead<P>[N];
+		size = N;
 	}
 
 	HashTable(int _size)
@@ -32,7 +40,7 @@ public:
 	void Insert(P a) override
 	{
 		int index;
-		index = a.id % (size / 2);
+		index = Hash_function(a.id,size);
 		Node<P>* En;
 		En = Arr[index].End();
 		Arr[index].insert(a,En);
@@ -41,20 +49,21 @@ public:
 	virtual void Remove(int _id) override
 	{
 		int index;
-		index = _id % (size / 2);
+		index = Hash_function(_id, size);
 		Arr[index].delete_key(_id);
 	}
 
 	virtual P search(int _id) override
 	{
 		int index;
-		index = _id % (size / 2);
+		index = Hash_function(_id, size);
 		P res;
 		res = Arr[index].search_key(_id);
 		return res;
 	}
 
-	ListWithoutHead<P> Get_el(int _i) {
+	ListWithoutHead<P> Get_el(int _i) 
+	{
 		return Arr[_i];
 	}
 
@@ -64,12 +73,5 @@ public:
 			out << v.Arr[i].Head()->data.id << endl;
 		return out;
 	}
-
-	/*friend ostream& PrintfLine(ostream& out, HashTable& v) // печать ключей
-	{
-		for (int i = 0; i < (v.size / 2); i++)
-			out << v.Arr[i].Head()->data.id << endl;
-		return out;
-	}*/
 
 };
